@@ -6,8 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
-@ToString(of = {"loginId","password","username","email","address1","address2","address3"})
+@Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
@@ -18,12 +17,36 @@ public class Member {
     private String password;
     private String username;
     private String email;
-    private String address1;
-    private String address2;
-    private String address3;
+    private String postnum;
+    private String street;
+    private String postetc;
     private Boolean adminChk;
     private LocalDateTime registerDate;
     private int money;
     private int point;
 
+    public Member(final String loginId, final String password) {
+        this.loginId = loginId;
+        this.password = password;
+    }
+
+    public Member(final String loginId, final String password, final String username, final String email, final String postnum, final String street, final String postetc) {
+        this.loginId = loginId;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.postnum = postnum;
+        this.street = street;
+        this.postetc = postetc;
+    }
+
+    public void newMemberInit(){
+        this.adminChk = false;
+        this.registerDate = LocalDateTime.now();
+        this.money = 0;
+        this.point = 0;
+    }
+    public void changePw(String password){
+        this.password = password;
+    }
 }

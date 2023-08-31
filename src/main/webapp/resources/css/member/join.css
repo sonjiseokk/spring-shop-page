@@ -6,7 +6,7 @@
 
 /* 화면 전체 렙 */
 .wrapper{
-    width: 1900px;
+    width: 100%;
 }
 
 /* content 랩 */
@@ -274,4 +274,41 @@
 }
 .incorrect{
     color : red;
+}
+
+/* 유효성 검사 문구 */
+
+.final_id_ck{
+    color: red;
+    display: none;
+}
+.final_pw_ck{
+    color: red;
+    display: none;
+}
+.final_pwck_ck{
+    color: red;
+    display: none;
+}
+.final_name_ck{
+    color: red;
+    display: none;
+}
+.final_mail_ck{
+    color: red;
+    display: none;
+}
+.final_addr_ck{
+    color: red;
+    display: none;
+}
+
+/* 비밀번호 확인 일치 유효성검사 */
+.pwck_input_re_1{
+    color : green;
+    display : none;
+}
+.pwck_input_re_2{
+    color : red;
+    display : none;
 }
