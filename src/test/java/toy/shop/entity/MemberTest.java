@@ -20,19 +20,5 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MemberTest {
     @Autowired
     EntityManager em;
-    @Test
-    @DisplayName("create_table_test")
-    void createTableTest() throws Exception {
-        //given
-        Member member = new Member();
-        member.setUsername("안녕");
-        //when
-        em.persist(member);
-        em.flush();
-        em.clear();
-
-        //then
-//        assertThat()
-    }
 
 }

@@ -8,7 +8,7 @@ spring:
     username: sa
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
   mail:
     host: smtp.gmail.com # 1
     port: 587 # 2

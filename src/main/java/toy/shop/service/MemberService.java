@@ -16,10 +16,12 @@ import java.util.Optional;
 @Slf4j
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder pwEncoder;
 
     public void memberJoin(final Member member){
         member.newMemberInit();
-        memberRepository.save(member);
+        Member securityMember = enableSecurity(member);
+        memberRepository.save(securityMember);
     }
 
     public boolean idCanUseChk(final String loginId) {
@@ -29,15 +31,22 @@ public class MemberService {
 
     public Optional<Member> login(LoginMemberDto dto) {
         List<Member> searchToIds = memberRepository.findByLoginId(dto.getLoginId());
-        log.info("dto.getLoginId ={}", dto.getLoginId());
-        for (Member searchToId : searchToIds) {
-            log.info("searchToId = {}", searchToId);
-        }
         if (searchToIds.size() != 1) {
             return Optional.empty();
         }
 
-        return Optional.of(searchToIds.get(0));
+        Member findMember = searchToIds.get(0);
+        if(pwEncoder.matches(dto.getPassword(), findMember.getPassword())) {        // 비밀번호 일치여부 판단
+            return Optional.of(searchToIds.get(0));
+        }
+        return Optional.empty();
+    }
+    public Member enableSecurity(Member member){
+        // 스프링 시큐리티
+        String nonSecurityPw = member.getPassword();
+        String encodePw = pwEncoder.encode(nonSecurityPw);
+        member.changePw(encodePw);
+        return member;
     }
 
 }

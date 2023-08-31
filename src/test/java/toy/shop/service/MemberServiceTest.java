@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Member;
 import toy.shop.entity.dto.LoginMemberDto;
@@ -24,14 +26,18 @@ class MemberServiceTest {
     MemberRepository memberRepository;
     @Autowired
     EntityManager em;
-
+    @Autowired
+    PasswordEncoder pwEncoder;
     @Test
     void memberJoin() {
         // given
         Member member = new Member("aaa11", "12345");
         memberService.memberJoin(member);
+        em.flush();
+        em.clear();
 
         Member findMember = memberRepository.findById(member.getId());
+
         assertThat(findMember).isEqualTo(member);
     }
 
@@ -39,7 +45,7 @@ class MemberServiceTest {
     @DisplayName("login")
     void login() throws Exception {
         //given
-        LoginMemberDto dto = new LoginMemberDto("aaa","aaa11");
+        LoginMemberDto dto = new LoginMemberDto("aaa","12345");
 
         Member registMember = new Member(dto.getLoginId(), dto.getPassword());
         memberService.memberJoin(registMember);
@@ -51,6 +57,24 @@ class MemberServiceTest {
 
         //then
         assertThat(loginMember.getLoginId()).isEqualTo(dto.getLoginId());
-        assertThat(loginMember.getPassword()).isEqualTo(dto.getPassword());
+
+        boolean matches = pwEncoder.matches(dto.getPassword(), loginMember.getPassword());
+        assertThat(matches).isTrue();
+    }
+    @Test
+    @DisplayName("enable_security_pw_test")
+    void enableSecurityPwTest() throws Exception {
+        //given
+        LoginMemberDto dto = new LoginMemberDto("aaa","12345");
+        Member member = new Member(dto.getLoginId(), dto.getPassword());
+        memberService.memberJoin(member);
+        em.flush();
+        em.clear();
+
+        //when
+        Member findMember = memberRepository.findById(member.getId());
+
+        //then
+        assertThat(findMember.getPassword()).isNotEqualTo(dto.getPassword());
     }
 }

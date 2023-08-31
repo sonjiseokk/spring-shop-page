@@ -1,6 +1,7 @@
 package toy.shop.entity.dto;
 
 import lombok.Data;
+import toy.shop.entity.Member;
 
 import java.time.LocalDateTime;
 
@@ -10,12 +11,18 @@ public class SessionMemberDto {
     private String password;
     private String username;
     private String email;
-    private String postnum;
-    private String street;
-    private String postetc;
     private Boolean adminChk;
-    private LocalDateTime registerDate;
     private int money;
     private int point;
+
+    public void convertToSessionMemberDto(Member member) {
+        this.email = (member.getEmail());
+        this.loginId = (member.getLoginId());
+        this.password = (member.getPassword());
+        this.username = (member.getUsername());
+        this.adminChk = (member.getAdminChk());
+        this.money = (member.getMoney());
+        this.point = (member.getPoint());
+    }
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Member;
 import toy.shop.entity.dto.LoginMemberDto;
+import toy.shop.entity.dto.SessionMemberDto;
 import toy.shop.service.MailService;
 import toy.shop.service.MemberService;
 
@@ -51,15 +52,18 @@ public class MemberController {
         HttpSession session = request.getSession();
 
         Optional<Member> loginResult = memberService.login(dto);
-        log.info("loginResult = {}",loginResult);
         if (loginResult.isEmpty()) {
-            log.info("no login result");
             boolean result = false;
             rttr.addFlashAttribute("result", result);
             return "redirect:/member/login";
         }
 
-        session.setAttribute("member",loginResult.get());
+        Member successLoginMember = loginResult.get();
+        SessionMemberDto sessionMemberDto = new SessionMemberDto();
+        sessionMemberDto.convertToSessionMemberDto(successLoginMember);
+        sessionMemberDto.setPassword(dto.getPassword());
+
+        session.setAttribute("member",sessionMemberDto);
         return "redirect:/main";
     }
 
@@ -82,5 +86,20 @@ public class MemberController {
 
         String checkNum = mailService.sendEmail(email);
         return checkNum;
+    }
+
+    @GetMapping("/logout.do")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        session.invalidate();
+
+        return "redirect:/main";
+    }
+    @PostMapping("/logout.do")
+    @ResponseBody
+    public void logout_async(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        session.invalidate();
+
     }
 }

@@ -26,8 +26,10 @@ public class InitConfig {
         EntityManager em;
         @Transactional
         public void init() {
-            Member member = new Member("test", "test", "test", "test@gmail.com", "13480", "경기 성남시 분당구 대왕판교로 477 (판교동),", "판교판교");
+            Member member = new Member("test", "test", "test", "test@gmail.com", "13480", "경기 성남시 분당구 대왕판교로 477 (판교동),", "판교판교",false);
+            Member admin = new Member("admin", "admin", "admin", "admin@gmail.com", "12345", "경기 성남시 분당구 대왕판교로 477 (판교동),", "판교판교어드민",true);
             memberService.memberJoin(member);
+            memberService.memberJoin(admin);
             em.flush();
             em.clear();
         }
