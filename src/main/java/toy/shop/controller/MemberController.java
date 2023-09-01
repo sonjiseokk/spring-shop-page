@@ -57,6 +57,7 @@ public class MemberController {
             rttr.addFlashAttribute("result", result);
             return "redirect:/member/login";
         }
+        log.info("로그인 성공");
 
         Member successLoginMember = loginResult.get();
         SessionMemberDto sessionMemberDto = new SessionMemberDto();

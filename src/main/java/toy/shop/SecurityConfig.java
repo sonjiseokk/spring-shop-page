@@ -9,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
@@ -25,10 +24,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
 
         // 사용자가 만든 로그인 화면을 띄운다.
-        http.formLogin().loginPage("/login");
+//        http.formLogin().loginPage("/login");
 
         // 로그아웃 설정
-        http.logout().logoutUrl("/logout").logoutSuccessUrl("/");
+//        http.logout().logoutUrl("/logout").logoutSuccessUrl("/");
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
