@@ -54,7 +54,7 @@
     $(".login_button").click(function(){
         console.log("요청")
         /* 로그인 메서드 서버 요청 */
-        $("#login_form").attr("action", "/member/login");
+        $("#login_form").attr("action", "/member/login.do");
         $("#login_form").submit();
     });
 </script>

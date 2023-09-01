@@ -9,8 +9,5 @@ import org.springframework.web.bind.annotation.RestController;
 @Controller
 @Slf4j
 public class BookController {
-    @GetMapping("/main")
-    public String mainPage(Model model){
-        return "main";
-    }
+
 }

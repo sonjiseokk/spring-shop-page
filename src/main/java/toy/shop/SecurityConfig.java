@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 다음 경로에 대한 요청은 인증 없이 접근을 허용하도록 설정한다.

@@ -47,7 +47,7 @@ public class MemberController {
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/login.do")
     public String login(@ModelAttribute LoginMemberDto dto, Model model, HttpServletRequest request, RedirectAttributes rttr) {
         HttpSession session = request.getSession();
 
