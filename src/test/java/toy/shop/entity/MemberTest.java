@@ -21,4 +21,5 @@ public class MemberTest {
     @Autowired
     EntityManager em;
 
+
 }
