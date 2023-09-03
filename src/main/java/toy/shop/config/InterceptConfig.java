@@ -1,5 +1,6 @@
-package toy.shop;
+package toy.shop.config;
 
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -8,7 +9,7 @@ import toy.shop.interceptor.AdminInterceptor;
 import toy.shop.interceptor.LoginInterceptor;
 
 @Configuration
-public class WebConfig implements WebMvcConfigurer {
+public class InterceptConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
@@ -16,7 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/admin/**");
 
         registry.addInterceptor(new LoginInterceptor())
-                .addPathPatterns("/member/login/**");
+                .addPathPatterns("/member/login.do");
     }
-
 }

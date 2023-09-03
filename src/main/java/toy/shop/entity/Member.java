@@ -4,10 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class Member {
     @Id
     @GeneratedValue
@@ -49,4 +51,5 @@ public class Member {
     public void changePw(String password){
         this.password = password;
     }
+
 }

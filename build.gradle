@@ -40,6 +40,7 @@ dependencies {
 
 	//jstl
 	implementation 'javax.servlet:jstl'
+	implementation 'net.sargue:java-time-jsptags:2.0.0'
 
 	// 시큐리티
 	implementation 'org.springframework.boot:spring-boot-starter-security'

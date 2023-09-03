@@ -2,12 +2,18 @@ package toy.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Author;
 import toy.shop.entity.AuthorNation;
+import toy.shop.entity.dto.PageDto;
 import toy.shop.service.AuthorService;
+
+import java.util.List;
 
 @Controller
 @Slf4j
@@ -44,7 +50,17 @@ public class AdminController {
         return "redirect:/admin/authorManage";
     }
     @GetMapping("/authorManage")
-    public String authorMangePage(){
+    public String authorManagePage(Pageable pageable,@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, Model model){
+        PageDto pageDto = new PageDto(pageable, keyword);
+        log.info("pageDto = {}", pageDto);
+        Page<Author> result = authorService.authorList(pageDto);
+        if(result.hasContent()) {
+            model.addAttribute("list",result.getContent());	// 작가 존재 경우
+        } else {
+            model.addAttribute("listCheck", "empty");	// 작가 존재하지 않을 경우
+        }
+        model.addAttribute("pageMaker", pageDto);
+        model.addAttribute("limit", result.getTotalPages());
         return "admin/authorManage";
     }
 }
