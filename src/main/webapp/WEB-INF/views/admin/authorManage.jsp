@@ -36,7 +36,11 @@
                         <c:forEach items="${list}" var="list">
                             <tr>
                                 <td><c:out value="${list.id}"></c:out> </td>
-                                <td><c:out value="${list.authorName}"></c:out></td>
+                                <td>
+                                    <a class="move" href='<c:out value="/admin/authorDetail/${list.id}"/>'>
+                                        <c:out value="${list.authorName}"></c:out>
+                                    </a>
+                                </td>
                                 <td><c:out value="${list.nation}"></c:out> </td>
 <%--                                <td><fmt:formatDate value="${list.createdDate}" pattern="yyyy-MM-dd"/></td>--%>
 <%--                                <td><fmt:formatDate value="${list.lastModifiedDate}" pattern="yyyy-MM-dd"/></td>--%>
@@ -94,7 +98,7 @@
                 <form id="moveForm" action="/admin/authorManage" method="get">
                     <input type="hidden" name="pageNum" value="${pageMaker.pageable.pageNumber}">
                     <input type="hidden" name="amount" value="${limit}">
-                    <input type="hidden" name="keyword" value="">
+                    <input type="hidden" name="keyword" value="${pageMaker.keyword}">
                 </form>
             </div>
 
@@ -109,6 +113,17 @@
                 return;
             }
             alert("작가 '${enroll_result}' 을 등록하였습니다.");
+        }
+        let mresult = '<c:out value="${modify_result}"/>';
+        checkmResult(mresult);
+        function checkmResult(mresult){
+
+            if(mresult === '1'){
+                alert("작가 정보 수정을 완료하였습니다.");
+            } else if(mresult === '0') {
+                alert("작가 정부 수정을 하지 못하였습니다.")
+            }
+
         }
     });
     let moveForm = $('#moveForm');
@@ -140,6 +155,33 @@
 
         searchForm.submit();
 
+    });
+
+    // /* 작가 상세 페이지 이동 */
+    $(".move").on("click", function(e){
+
+        e.preventDefault();
+        var hrefValue = $(this).attr("href");
+        var idValue = hrefValue.substring(hrefValue.lastIndexOf('/') + 1);
+
+        var moveForm = $("<form>").attr({
+            "method": "GET",
+            "action": "/admin/authorDetail/" + idValue
+        });
+
+        // 현재 페이지의 pageMaker 정보 가져오기
+        var currentPageNum = searchForm.find("input[name='pageNum']").val();
+        var currentAmount = searchForm.find("input[name='amount']").val();
+        var currentKeyword = searchForm.find("input[name='keyword']").val();
+
+        moveForm.find("input[name='pageNum']").val(currentPageNum);
+        moveForm.find("input[name='amount']").val(currentAmount);
+        moveForm.find("input[name='keyword']").val(currentKeyword);
+
+        moveForm.append("<input type='hidden' name='pageNum' value='" + currentPageNum + "'>");
+        moveForm.append("<input type='hidden' name='amount' value='" + currentAmount + "'>");
+        moveForm.append("<input type='hidden' name='keyword' value='" + currentKeyword + "'>");
+        moveForm.appendTo("body").submit();
     });
 </script>
 </body>
