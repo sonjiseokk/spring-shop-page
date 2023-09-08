@@ -20,7 +20,7 @@ public class Book extends BaseEntity{
     @Column(name = "book_id")
     private Long id;
 
-    private String BookName;
+    private String bookName;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "author_id")
     private Author author;
@@ -38,7 +38,7 @@ public class Book extends BaseEntity{
 
 
     public Book(final String bookName, final LocalDate publeYear, final String publisher, final int bookPrice, final int bookStock, final double bookDiscount, final String bookIntro, final String bookContents) {
-        this.BookName = bookName;
+        this.bookName = bookName;
         this.publeYear = publeYear;
         this.publisher = publisher;
         this.bookPrice = bookPrice;

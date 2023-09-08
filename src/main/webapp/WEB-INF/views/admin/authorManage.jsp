@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Insert title here</title>
-    <link rel="stylesheet" href="../resources/css/admin/authorManage.css">
+    <link rel="stylesheet" href="../../../resources/css/admin/authorManage.css">
 
     <script
             src="https://code.jquery.com/jquery-3.4.1.js"
@@ -82,15 +82,15 @@
                             </li>
                         </c:if>
                         <!-- 페이지 번호 -->
-                        <c:forEach begin="${pageMaker.pageable.pageNumber+1}" end="${limit-1 < 1 ? limit : limit-1}" var="num">
+                        <c:forEach begin="${pageMaker.pageable.pageNumber+1}" end="${limit}" var="num">
                             <li class="pageMaker_btn ${pageMaker.pageable.pageNumber+1 == num ? "active":""}">
                                 <a href="?page=${num}">${num}</a>
                             </li>
                         </c:forEach>
                         <!-- 다음 버튼 -->
-                        <c:if test="${pageMaker.pageable.pageNumber + 1  <= limit}">
+                        <c:if test="${pageMaker.pageable.pageNumber + 1< limit}">
                             <li class="pageMaker_btn next">
-                                <a href="?page=${pageMaker.pageable.pageNumber + 1}">다음</a>
+                                <a href="?page=${pageMaker.pageable.pageNumber + 2}">다음</a>
                             </li>
                         </c:if>
                     </ul>

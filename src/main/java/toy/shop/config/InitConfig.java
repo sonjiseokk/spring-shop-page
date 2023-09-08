@@ -4,16 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import toy.shop.entity.Author;
-import toy.shop.entity.AuthorNation;
-import toy.shop.entity.Category;
-import toy.shop.entity.Member;
+import toy.shop.entity.*;
 import toy.shop.repository.AuthorRepository;
+import toy.shop.repository.BookRepository;
+import toy.shop.repository.CategoryRepository;
 import toy.shop.service.MemberService;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+
 @Component
 @RequiredArgsConstructor
 public class InitConfig {
@@ -28,6 +29,10 @@ public class InitConfig {
         MemberService memberService;
         @Autowired
         AuthorRepository authorRepository;
+        @Autowired
+        BookRepository bookRepository;
+        @Autowired
+        CategoryRepository categoryRepository;
         @PersistenceContext
         EntityManager em;
         @Transactional
@@ -39,6 +44,13 @@ public class InitConfig {
 
             for (int i = 0; i < 100; i++) {
                 Author author1 = new Author("이름" + i, AuthorNation.KOREA, "설명");
+                Category category = new Category(1, "국내", null);
+                categoryRepository.save(category);
+
+                Book book = new Book("상품"+i, LocalDate.now(), "퍼블리셔", 2000 * i, 10 * i, 0.1, "책소개", "작가소개");
+                book.setAuthor(author1);
+                book.setCategory(category);
+                bookRepository.save(book);
                 authorRepository.save(author1);
 
             }

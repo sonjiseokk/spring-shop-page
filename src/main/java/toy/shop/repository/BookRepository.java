@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Book;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -24,4 +25,8 @@ public class BookRepository {
         return em.find(Book.class, id);
     }
 
+    public List<Book> findAll() {
+        return em.createQuery("select b from Book b", Book.class)
+                .getResultList();
+    }
 }

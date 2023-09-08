@@ -4,16 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Author;
 import toy.shop.entity.Book;
 import toy.shop.entity.Category;
 import toy.shop.entity.dto.BookDto;
+import toy.shop.entity.dto.PageDto;
 import toy.shop.service.AuthorService;
 import toy.shop.service.BookService;
 import toy.shop.service.CategoryService;
@@ -52,5 +56,20 @@ public class BookController {
         rttr.addFlashAttribute("enroll_result", book.getBookName());
 
         return "redirect:/admin/goodsManage";
+    }
+    @GetMapping("/goodsManage")
+    public String goodsManagePage(Pageable pageable, @RequestParam(required = false,defaultValue = "") String keyword, Model model){
+        PageDto pageDto = new PageDto(pageable, keyword);
+        Page<Book> result = bookService.pagingAllBook(pageDto);
+
+        if (!result.isEmpty()) {
+            model.addAttribute("list", result.getContent());
+        } else{
+            model.addAttribute("listCheck", "empty");
+        }
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("limit", result.getTotalPages());
+
+        return "admin/goodsManage";
     }
 }

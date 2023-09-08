@@ -34,11 +34,6 @@ public class AuthorController {
         return "admin/main";
     }
 
-    @GetMapping("/goodsManage")
-    public String goodsManagePage() {
-        return "admin/goodsManage";
-    }
-
     @GetMapping("/authorEnroll")
     // dto로 쪼개야함
     public String authorEnrollPage() {
