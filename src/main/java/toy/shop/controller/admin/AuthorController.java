@@ -1,26 +1,32 @@
-package toy.shop.controller;
+package toy.shop.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import toy.shop.controller.PageRequest;
 import toy.shop.entity.Author;
 import toy.shop.entity.AuthorNation;
+import toy.shop.entity.Book;
 import toy.shop.entity.dto.AuthorDto;
+import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.PageDto;
 import toy.shop.service.AuthorService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
 @Slf4j
 @RequestMapping("/admin")
 @RequiredArgsConstructor
-public class AdminController {
+public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/main")
@@ -31,11 +37,6 @@ public class AdminController {
     @GetMapping("/goodsManage")
     public String goodsManagePage() {
         return "admin/goodsManage";
-    }
-
-    @GetMapping("/goodsEnroll")
-    public String goodsEnrollPage() {
-        return "admin/goodsEnroll";
     }
 
     @GetMapping("/authorEnroll")
@@ -92,8 +93,9 @@ public class AdminController {
 
         return "admin/authorModify";
     }
+
     @PostMapping("/authorModify/{id}")
-    public String authorModify(@ModelAttribute AuthorDto authorDto, @RequestParam String nation, @PathVariable Long id, Model model){
+    public String authorModify(@ModelAttribute AuthorDto authorDto, @RequestParam String nation, @PathVariable Long id, Model model) {
         authorDto.setNation(AuthorNation.valueOf(nation)); // 문자열을 Enum으로 변환
         Author authorById = authorService.findById(id);
         authorById.changeAuthorValues(authorDto);
@@ -103,5 +105,19 @@ public class AdminController {
         return "redirect:/admin/authorManage";
     }
 
+    @GetMapping("/authorPop")
+    public String authorPopPage(@PageableDefault(page = 0, size = 5) Pageable pageable, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, Model model) {
+        PageDto pageDto = new PageDto(pageable, keyword);
+        int totalPages = authorService.authorList(pageDto).getTotalPages();
+        List<Author> list = authorService.authorList(pageDto).getContent();
+        if (list.isEmpty()) {
+            model.addAttribute("listCheck", "empty");
+        } else {
+            model.addAttribute("list", list);
+            model.addAttribute("limit", totalPages);
+        }
+        model.addAttribute("pageDto", pageDto);
+        return "admin/authorPop";
+    }
 
 }

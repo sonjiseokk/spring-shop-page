@@ -76,14 +76,14 @@
                 <div class="pageMaker_wrap" >
                     <ul class="pageMaker">
                         <!-- 이전 버튼 -->
-                        <c:if test="${pageMaker.pageable.pageNumber > 1 }">
+                        <c:if test="${pageMaker.pageable.pageNumber >= 1 }">
                             <li class="pageMaker_btn prev">
-                                <a href="?page=${pageMaker.pageable.pageNumber - 1}">이전</a>
+                                <a href="?page=${pageMaker.pageable.pageNumber}">이전</a>
                             </li>
                         </c:if>
                         <!-- 페이지 번호 -->
-                        <c:forEach begin="${pageMaker.pageable.pageNumber}" end="${limit-1 < 1 ? limit : limit-1}" var="num">
-                            <li class="pageMaker_btn ${pageMaker.pageable.pageNumber == num ? "active":""}">
+                        <c:forEach begin="${pageMaker.pageable.pageNumber+1}" end="${limit-1 < 1 ? limit : limit-1}" var="num">
+                            <li class="pageMaker_btn ${pageMaker.pageable.pageNumber+1 == num ? "active":""}">
                                 <a href="?page=${num}">${num}</a>
                             </li>
                         </c:forEach>

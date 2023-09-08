@@ -3,6 +3,7 @@ package toy.shop.entity.dto;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.domain.Pageable;
+import toy.shop.controller.PageRequest;
 
 @Getter
 @ToString

@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import toy.shop.entity.dto.AuthorDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +26,8 @@ public class Author extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private AuthorNation nation;
     private String authorIntro;
+    @OneToMany(mappedBy = "author")
+    private List<Book> bookList = new ArrayList<>();
 
     public Author(final String authorName, final AuthorNation nation, final String authorIntro) {
         this.authorName = authorName;

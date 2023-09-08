@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Author;
 import toy.shop.entity.AuthorNation;
+import toy.shop.entity.Category;
 import toy.shop.entity.Member;
 import toy.shop.repository.AuthorRepository;
 import toy.shop.service.MemberService;
@@ -41,6 +42,23 @@ public class InitConfig {
                 authorRepository.save(author1);
 
             }
+
+            Category category = new Category(1, "국내", null);
+            em.persist(category);
+            Category category1 = new Category(2, "소설", category.getCateCode());
+            em.persist(category1);
+            Category category2 = new Category(3, "한국소설", category1.getCateCode());
+            em.persist(category2);
+
+
+            Category category01 = new Category(1, "해외", null);
+            em.persist(category01);
+            Category category11 = new Category(2, "경제/경영", category01.getCateCode());
+            em.persist(category11);
+            Category category12 = new Category(3, "경영일반", category11.getCateCode());
+            em.persist(category12);
+
+
             em.flush();
             em.clear();
         }
