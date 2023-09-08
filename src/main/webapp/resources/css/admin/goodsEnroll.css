@@ -271,3 +271,10 @@ input[name='publeYear'] {
 .cate_wrap:not(:first-child) {
     margin-top: 20px;
 }
+.ck_warn{						/* 입력란 공란 경고 태그 */
+    display: none;
+    padding-top: 10px;
+    text-align: center;
+    color: #e05757;
+    font-weight: 300;
+}
