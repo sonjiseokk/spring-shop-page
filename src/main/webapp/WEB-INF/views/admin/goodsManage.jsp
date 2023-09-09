@@ -36,7 +36,11 @@
                             <c:forEach items="${list}" var="list">
                                 <tr>
                                     <td><c:out value="${list.id}"></c:out></td>
-                                    <td><c:out value="${list.bookName}"></c:out></td>
+                                    <td>
+                                        <a class="move" href='<c:out value="/admin/goodsDetail/${list.id}"/>'>
+                                            <c:out value="${list.bookName}"></c:out>
+                                        </a>
+                                        </td>
                                     <td><c:out value="${list.author.authorName}"></c:out></td>
                                     <td><c:out value="${list.category.cateName}"></c:out></td>
                                     <td><c:out value="${list.bookStock}"></c:out></td>
@@ -152,6 +156,17 @@
     //     moveForm.find("input[name='pageNum']").val($(this).attr("href"));
     //
     //     moveForm.submit();
+    //
+    // });
+    /* 상품 조회 페이지 */
+    // $(".move").on("click", function(e){
+    //
+    //     e.preventDefault();
+    //
+    //     moveForm.append("<input type='hidden' name='bookId' value='"+$(this).attr("href") + "'>");
+    //     moveForm.attr("action", "/admin/goodsDetail");
+    //     moveForm.submit();
+    //
     //
     // });
 </script>
