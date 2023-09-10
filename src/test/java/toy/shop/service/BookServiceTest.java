@@ -37,12 +37,10 @@ class BookServiceTest {
     @Commit
     void bookEnrollTest() throws Exception {
         //given
-        Author author = new Author("작가이름", AuthorNation.KOREA,"작가소개");
-        authorService.authorEnroll(author);
-        Category category = new Category(1,"한국",null);
-        categoryService.save(category);
+        Author author = initAuthor("작가이름",AuthorNation.KOREA,"인트로");
+        Category category = initCategory(1, "국내", null);
 
-        BookDto dto = new BookDto("북이름", author.getId(), "2023-09-08", "퍼블리셔", 1L,10000, 100, 0.2, "인트로", "콘텐츠");
+        BookDto dto = getBookDto(author, category);
         em.flush();
         em.clear();
         //when
@@ -62,4 +60,44 @@ class BookServiceTest {
         assertThat(findBook.getAuthor().getAuthorName()).isEqualTo(relatedAuthor.getAuthorName());
     }
 
+    @Test
+    @DisplayName("change_dto_values")
+    void changeDtoValues() throws Exception {
+        //given
+        // dto가 주어지고 (컨트롤러)
+        Author author = initAuthor("작가이름2",AuthorNation.ETC,"인트로");
+        Category category = initCategory(1, "해외", null);
+        BookDto dto = getBookDto(author,category);
+        LocalDate date = dto.convertStringToLocalDate(dto.getPubleYear());
+
+        Book book = new Book("기존이름", date, "기존퍼블리셔", 20000, 100, 0.1, "기존인트로", "기존컨텐츠");
+        book.setCategory(null);
+        book.setAuthor(null);
+        //when
+        bookService.bookEnroll(book);
+        bookService.changeValues(book.getId(), dto, author, category, date);
+
+        em.flush();
+        em.clear();
+        Book findBook = bookService.findBookById(book.getId());
+        //then
+        assertThat(findBook.getAuthor().getAuthorName()).isEqualTo(author.getAuthorName());
+        assertThat(findBook.getCategory().getCateCode()).isEqualTo(category.getCateCode());
+        assertThat(findBook.getPubleYear()).isEqualTo(date);
+
+        assertThat(findBook.getBookName()).isNotEqualTo("기존이름");
+    }
+    private Author initAuthor(final String authorName,AuthorNation nation,String intro) {
+        Author author = new Author(authorName, nation,intro);
+        authorService.authorEnroll(author);
+        return author;
+    }
+    private Category initCategory(int tier,String cateName,Long cateParent){
+        Category category = new Category(tier,cateName,cateParent);
+        categoryService.save(category);
+        return category;
+    }
+    private static BookDto getBookDto(final Author author, final Category category) {
+        return new BookDto("새로운 북이름", author.getId(), "2023-09-08", "새로운 퍼블리셔", category.getCateCode(), 10000, 100, 0.2, "새로운 인트로", "새로운 콘텐츠");
+    }
 }

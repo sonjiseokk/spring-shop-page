@@ -42,15 +42,5 @@ public class AuthorRepository {
                 .setParameter("authorName", authorName)
                 .getResultList();
     }
-    @Transactional
-    public void update(Author author){
-        em.createQuery("update Author a " +
-                        "set a.authorName = :authorName, a.nation = :nation, a.authorIntro = :authorIntro " +
-                        "where a.id = :id")
-                .setParameter("authorName", author.getAuthorName())
-                .setParameter("nation", author.getNation())
-                .setParameter("authorIntro", author.getAuthorIntro())
-                .setParameter("id", author.getId());
-    }
 
 }

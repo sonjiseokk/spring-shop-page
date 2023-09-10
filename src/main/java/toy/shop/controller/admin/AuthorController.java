@@ -92,10 +92,7 @@ public class AuthorController {
     @PostMapping("/authorModify/{id}")
     public String authorModify(@ModelAttribute AuthorDto authorDto, @RequestParam String nation, @PathVariable Long id, Model model) {
         authorDto.setNation(AuthorNation.valueOf(nation)); // 문자열을 Enum으로 변환
-        Author authorById = authorService.findById(id);
-        authorById.changeAuthorValues(authorDto);
-
-        authorService.update(authorById);
+        authorService.update(id,authorDto.getAuthorName(),authorDto.getNation(),authorDto.getAuthorIntro());
         model.addAttribute("modify_result", 1);
         return "redirect:/admin/authorManage";
     }

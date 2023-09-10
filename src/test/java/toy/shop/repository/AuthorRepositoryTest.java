@@ -76,21 +76,5 @@ class AuthorRepositoryTest {
         assertThat(author.getAuthorName()).isEqualTo(findAuthor.getAuthorName());
         assertThat(author.getAuthorIntro()).isEqualTo(findAuthor.getAuthorIntro());
     }
-    @Test
-    @DisplayName("update")
-    void update() throws Exception {
-        //given
-        Author author = new Author("이름", KOREA, "설명");
-        authorRepository.save(author);
 
-        //when
-        author.setNation(ETC);
-        authorRepository.update(author);
-        em.flush();
-        em.clear();
-
-        Author findAuthor = authorRepository.findById(author.getId());
-        //then
-        assertThat(findAuthor.getNation()).isEqualTo(ETC);
-    }
 }

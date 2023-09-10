@@ -4,8 +4,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import toy.shop.entity.dto.AuthorDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,10 +36,10 @@ public class Author extends BaseEntity{
     public void setNation(final AuthorNation nation) {
         this.nation = nation;
     }
-    public void changeAuthorValues(AuthorDto dto){
-        this.authorName = dto.getAuthorName();
-        this.nation = dto.getNation();
-        this.authorIntro = dto.getAuthorIntro();
+    public void changeAuthorValues(final String authorName, final AuthorNation nation, final String authorIntro){
+        this.authorName = authorName;
+        this.nation = nation;
+        this.authorIntro = authorIntro;
     }
 
     @Override
