@@ -41,6 +41,11 @@ public class BookRepositoryQuery {
 
         return new PageImpl<>(content, pageable, total);
     }
+//    public void update(final Book orgBook) {
+//        queryFactory
+//                .update(book)
+//                .set(orgBook)
+//    }
 
     private Predicate keywordCheck(String keyword) {
         if (StringUtils.hasText(keyword)) {
@@ -48,4 +53,6 @@ public class BookRepositoryQuery {
         }
         return null;
     }
+
+
 }

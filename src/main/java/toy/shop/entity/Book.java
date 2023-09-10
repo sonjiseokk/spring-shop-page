@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import toy.shop.entity.dto.BookDto;
 
 import javax.persistence.*;
 
@@ -55,6 +56,19 @@ public class Book extends BaseEntity{
 
     public void setCategory(final Category category) {
         this.category = category;
+    }
+
+    public void changeDtoValue(BookDto dto,Author author,Category category,LocalDate publeYear) {
+        this.bookName = dto.getBookName();
+        this.author = author;
+        this.category = category;
+        this.publeYear = publeYear;
+        this.publisher = dto.getPublisher();
+        this.bookPrice = dto.getBookPrice();
+        this.bookStock = dto.getBookStock();
+        this.bookDiscount = dto.getBookDiscount();
+        this.bookIntro = dto.getBookIntro();
+        this.bookContents = dto.getBookContents();
     }
 }
 

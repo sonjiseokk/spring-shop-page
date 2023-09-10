@@ -140,12 +140,12 @@
 
     <div class="btn_section">
       <button id="cancelBtn" class="btn">상품 목록</button>
-      <button id="enrollBtn" class="btn enroll_btn">수정 </button>
+      <button id="modifyBtn" class="btn enroll_btn">수정 </button>
     </div>
   </div>
 
 
-  <form id="moveForm" action="/admin/goodsManage" method="get" >
+  <form id="moveForm" method="get" >
     <input type="hidden" name="pageNum" value="${pageDto.pageable.pageNumber}">
     <input type="hidden" name="amount" value="${pageDto.pageable.pageSize}">
     <input type="hidden" name="keyword" value="${pageDto.keyword}">
@@ -260,6 +260,20 @@
     if(targetCate2.cateParent == obj.value){
       $(obj).attr("selected", "selected");
     }
+  });
+  /* 수정 페이지 이동 */
+  $("#modifyBtn").on("click", function(e){
+    e.preventDefault();
+    var idValue = ${goodsInfo.id};
+
+    $("#moveForm").attr("action", "/admin/goodsModify/" + idValue);
+    $("#moveForm").submit();
+  });
+  /* 취소 버튼 */
+  $("#cancelBtn").on("click", function(e){
+    e.preventDefault();
+    $("#moveForm").attr("action", "/admin/goodsManage");
+    $("#moveForm").submit();
   });
 
 

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Author;
 import toy.shop.entity.Book;
 import toy.shop.entity.Category;
+import toy.shop.entity.dto.AuthorDto;
 import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.CategoryDto;
 import toy.shop.entity.dto.PageDto;
@@ -47,7 +48,7 @@ public class BookController {
         Category relatedCategory = categoryService.findById(dto.getCateCode());
 
         LocalDate date = dto.convertStringToLocalDate(dto.getPubleYear());
-        Book book = new Book(dto.getBookName(),date,dto.getPublisher(),dto.getBookPrice(), dto.getBookPrice(), dto.getBookDiscount(),dto.getBookIntro(),dto.getBookContents());
+        Book book = new Book(dto.getBookName(),date,dto.getPublisher(),dto.getBookPrice(), dto.getBookStock(), dto.getBookDiscount(),dto.getBookIntro(),dto.getBookContents());
         book.setAuthor(relatedAuthor);
         book.setCategory(relatedCategory);
 
@@ -78,21 +79,47 @@ public class BookController {
         PageDto pageDto = new PageDto(pageable, keyword);
         Book book = bookService.findBookById(id);
 
-        ObjectMapper objm = new ObjectMapper();
-        objm.registerModule(new JavaTimeModule());
-        List<Category> allList = categoryService.search(null);
-        for (Category category : allList) {
-            log.info("category.id = {}",category.getCateCode());
-        }
-
-        CategoryDto categoryDto = new CategoryDto();
-        List<CategoryDto> categoryDtos = categoryDto.entityToDto(allList);
-        String cateList = objm.writeValueAsString(categoryDtos);
+        String cateList = getCateList();
 
         model.addAttribute("cateList", cateList);
         model.addAttribute("pageDto", pageDto);
         model.addAttribute("goodsInfo", book);
 
         return "admin/goodsDetail";
+    }
+
+    @GetMapping("/goodsModify/{id}")
+    public String goodsModifyPage(@PathVariable Long id,Pageable pageable,@RequestParam(required = false,defaultValue = "") String keyword, Model model) throws JsonProcessingException {
+        PageDto pageDto = new PageDto(pageable, keyword);
+        Book findBook = bookService.findBookById(id);
+        log.info("findBook.getCategory() = {}",findBook.getCategory());
+        String cateList = getCateList();
+
+        model.addAttribute("cateList", cateList);
+        model.addAttribute("pageDto", pageDto);
+        model.addAttribute("goodsInfo", findBook);
+
+        return "admin/goodsModify";
+    }
+    @PostMapping("/goodsModify/{id}")
+    public String goodsModify(@ModelAttribute BookDto dto, @PathVariable Long id, Model model){
+        LocalDate publeYear = dto.convertStringToLocalDate(dto.getPubleYear());
+        Author author = authorService.findById(dto.getAuthorId());
+        Category category = categoryService.findById(dto.getCateCode());
+
+        bookService.changeValues(id, dto, author, category, publeYear);
+
+        return "redirect:/admin/goodsDetail/{id}";
+    }
+
+
+    private String getCateList() throws JsonProcessingException {
+        ObjectMapper objm = new ObjectMapper();
+        objm.registerModule(new JavaTimeModule());
+        List<Category> allList = categoryService.search(null);
+
+        CategoryDto categoryDto = new CategoryDto();
+        List<CategoryDto> categoryDtos = categoryDto.entityToDto(allList);
+        return objm.writeValueAsString(categoryDtos);
     }
 }
