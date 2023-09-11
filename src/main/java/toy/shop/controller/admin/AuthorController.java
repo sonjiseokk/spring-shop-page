@@ -112,4 +112,17 @@ public class AuthorController {
         return "admin/authorPop";
     }
 
+    @PostMapping("/authorDelete/{id}")
+    public String authorDelete(@PathVariable Long id,RedirectAttributes rttr) {
+        boolean result;
+        try {
+            authorService.authorDelete(id);
+            result = true;
+        } catch (Exception e){
+            result = false;
+        }
+        rttr.addFlashAttribute("delete_result", result);
+        return "redirect:/admin/authorManage";
+    }
+
 }

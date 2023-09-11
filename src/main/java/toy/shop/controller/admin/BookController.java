@@ -112,6 +112,22 @@ public class BookController {
         return "redirect:/admin/goodsDetail/{id}";
     }
 
+    @PostMapping("/goodsDelete/{id}")
+    public String goodsDelete(@PathVariable Long id,RedirectAttributes rttr) {
+        boolean result;
+        try {
+            bookService.goodsDelete(id);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        log.info("result = {}", result);
+        //result는 true로 잘 나옴
+
+        rttr.addFlashAttribute("delete_result", result);
+
+        return "redirect:/admin/goodsManage";
+    }
 
     private String getCateList() throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();

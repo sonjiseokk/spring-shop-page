@@ -125,6 +125,13 @@
             alert("상품'"+ eResult +"'을 등록하였습니다.");
 
         }
+        /* 삭제 결과 경고창 */
+        let delete_result = '${delete_result}';
+
+        // 이유는 모르겠지만 스트링으로 넘어옴
+        if(delete_result === 'true'){
+            alert("삭제 완료");
+        }
 
     });
     let searchForm = $('#searchForm');
@@ -146,6 +153,8 @@
         searchForm.submit();
 
     });
+
+
 
 
     /* 페이지 이동 버튼 */

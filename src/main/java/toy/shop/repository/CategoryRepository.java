@@ -41,4 +41,9 @@ public class CategoryRepository {
     public Category findById(final Long cateCode) {
         return em.find(Category.class, cateCode);
     }
+
+    public void delete(Category category) {
+        em.remove(category);
+
+    }
 }

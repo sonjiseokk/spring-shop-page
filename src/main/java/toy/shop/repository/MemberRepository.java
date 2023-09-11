@@ -33,4 +33,8 @@ public class MemberRepository {
         return em.find(Member.class,id);
     }
 
+    public void delete(Member member) {
+        em.remove(member);
+    }
+
 }

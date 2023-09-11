@@ -30,4 +30,7 @@ public class BookRepository {
                 .getResultList();
     }
 
+    public void delete(Book book) {
+        em.remove(book);
+    }
 }

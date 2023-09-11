@@ -125,6 +125,14 @@
             }
 
         }
+        /* 삭제 결과 경고창 */
+        let delete_result = '${delete_result}';
+
+        if(delete_result == 'true'){
+            alert("삭제 완료");
+        } else if(delete_result == 'false'){
+            alert("해당 작가 데이터를 사용하고 있는 데이터가 있어서 삭제 할 수 없습니다.")
+        }
     });
     let moveForm = $('#moveForm');
 

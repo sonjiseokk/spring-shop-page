@@ -43,4 +43,8 @@ public class AuthorRepository {
                 .getResultList();
     }
 
+    public void delete(Author author) {
+        em.remove(author);
+    }
+
 }

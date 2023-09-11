@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Author;
 import toy.shop.entity.AuthorNation;
+import toy.shop.entity.Book;
 import toy.shop.entity.dto.PageDto;
 import toy.shop.repository.AuthorRepository;
 import toy.shop.repository.query.AuthorRepositoryQuery;
@@ -33,5 +34,10 @@ public class AuthorService {
 
     public Page<Author> authorList(PageDto pageDto){
         return authorRepositoryQuery.authorGetList(pageDto);
+    }
+    @Transactional
+    public void authorDelete(Long id) throws Exception{
+        Author author = authorRepository.findById(id);
+        authorRepository.delete(author);
     }
 }

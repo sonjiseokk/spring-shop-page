@@ -41,7 +41,9 @@ public class BookService {
         orgBook.changeDtoValue(dto, author, category, publeYear);
     }
 
-//    public void update(final Book orgBook) {
-//        bookRepositoryQuery.update(orgBook);
-//    }
+    @Transactional
+    public void goodsDelete(Long id) throws Exception{
+        Book book = bookRepository.findById(id);
+        bookRepository.delete(book);
+    }
 }
