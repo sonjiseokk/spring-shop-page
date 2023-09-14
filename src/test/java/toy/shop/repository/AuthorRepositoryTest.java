@@ -70,7 +70,7 @@ class AuthorRepositoryTest {
         em.flush();
         em.clear();
         //when
-        Author findAuthor = authorRepository.findById(author.getId());
+        Author findAuthor = authorRepository.findById(author.getId()).get();
         //then
         assertThat(author.getId()).isEqualTo(findAuthor.getId());
         assertThat(author.getAuthorName()).isEqualTo(findAuthor.getAuthorName());

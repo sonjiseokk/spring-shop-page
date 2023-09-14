@@ -26,3 +26,6 @@ spring:
       pageable:
         default-page-size: 10
         one-indexed-parameters: true
+image:
+  path: C:/Users/michi/Desktop/images
+

@@ -17,7 +17,9 @@ import toy.shop.entity.QAuthor;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 import static toy.shop.entity.QAuthor.*;
 
@@ -33,8 +35,8 @@ public class AuthorRepository {
         em.persist(author);
     }
 
-    public Author findById(Long id) {
-        return em.find(Author.class, id);
+    public Optional<Author> findById(Long id) {
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
     public List<Author> findByName(String authorName){

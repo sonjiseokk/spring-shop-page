@@ -44,7 +44,7 @@ class BookServiceTest {
         em.flush();
         em.clear();
         //when
-        Author relatedAuthor = authorService.findById(dto.getAuthorId());
+        Author relatedAuthor = authorService.findById(dto.getAuthorId()).get();
 
         LocalDate date = dto.convertStringToLocalDate(dto.getPubleYear());
         Book book = new Book(dto.getBookName(),date,dto.getPublisher(),dto.getBookPrice(), dto.getBookPrice(), dto.getBookDiscount(),dto.getBookIntro(),dto.getBookContents());

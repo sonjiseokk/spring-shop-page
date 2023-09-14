@@ -52,6 +52,8 @@ dependencies {
 	// json 라이브러리
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2'
 
+	/* thumbnailator */
+	implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.1'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

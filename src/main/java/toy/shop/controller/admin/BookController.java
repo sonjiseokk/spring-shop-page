@@ -5,11 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.coobird.thumbnailator.Thumbnails;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Author;
 import toy.shop.entity.Book;
@@ -18,12 +23,22 @@ import toy.shop.entity.dto.AuthorDto;
 import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.CategoryDto;
 import toy.shop.entity.dto.PageDto;
+import toy.shop.entity.web.AttachImage;
 import toy.shop.service.AuthorService;
 import toy.shop.service.BookService;
 import toy.shop.service.CategoryService;
+import toy.shop.service.UploadService;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -33,6 +48,9 @@ public class BookController {
     private final BookService bookService;
     private final AuthorService authorService;
     private final CategoryService categoryService;
+    private final UploadService uploadService;
+    @Value("${image.path}")
+    private String uploadFolder;
     @GetMapping("/goodsEnroll")
     public String goodsEnrollPage(Model model) throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
@@ -44,7 +62,7 @@ public class BookController {
     }
     @PostMapping("/goodsEnroll")
     public String goodsEnrollPOST(BookDto dto, RedirectAttributes rttr) {
-        Author relatedAuthor = authorService.findById(dto.getAuthorId());
+        Author relatedAuthor = authorService.findById(dto.getAuthorId()).get();
         Category relatedCategory = categoryService.findById(dto.getCateCode());
 
         LocalDate date = dto.convertStringToLocalDate(dto.getPubleYear());
@@ -104,7 +122,7 @@ public class BookController {
     @PostMapping("/goodsModify/{id}")
     public String goodsModify(@ModelAttribute BookDto dto, @PathVariable Long id, Model model){
         LocalDate publeYear = dto.convertStringToLocalDate(dto.getPubleYear());
-        Author author = authorService.findById(dto.getAuthorId());
+        Author author = authorService.findById(dto.getAuthorId()).get();
         Category category = categoryService.findById(dto.getCateCode());
 
         bookService.changeValues(id, dto, author, category, publeYear);
@@ -129,6 +147,15 @@ public class BookController {
         return "redirect:/admin/goodsManage";
     }
 
+    @PostMapping("/uploadAjaxAction")
+    public ResponseEntity<List<AttachImage>> uploadAjax(MultipartFile[] uploadFile){
+        List<AttachImage> list = uploadService.upload(uploadFile);
+        if (list == null) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
     private String getCateList() throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
         objm.registerModule(new JavaTimeModule());
@@ -138,4 +165,6 @@ public class BookController {
         List<CategoryDto> categoryDtos = categoryDto.entityToDto(allList);
         return objm.writeValueAsString(categoryDtos);
     }
+
+
 }

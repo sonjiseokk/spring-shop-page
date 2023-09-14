@@ -31,7 +31,7 @@ public class AuthorTest {
         em.clear();
 
         //when
-        Author findAuthor = authorRepository.findById(author.getId());
+        Author findAuthor = authorRepository.findById(author.getId()).get();
 
         //then
         assertThat(author.getAuthorName()).isEqualTo(findAuthor.getAuthorName());

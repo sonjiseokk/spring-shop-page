@@ -73,7 +73,7 @@ public class AuthorController {
         PageDto pageDto = new PageDto(pageable, keyword);
         log.info("detail in pageDto = {}", pageDto);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("authorInfo", authorService.findById(id));
+        model.addAttribute("authorInfo", authorService.findById(id).get());
 
         return "admin/authorDetail";
 
@@ -84,7 +84,7 @@ public class AuthorController {
         PageDto pageDto = new PageDto(pageable, keyword);
         log.info("detail in pageDto = {}", pageDto);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("authorInfo", authorService.findById(id));
+        model.addAttribute("authorInfo", authorService.findById(id).get());
 
         return "admin/authorModify";
     }

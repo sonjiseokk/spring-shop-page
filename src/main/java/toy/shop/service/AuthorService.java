@@ -12,6 +12,9 @@ import toy.shop.entity.dto.PageDto;
 import toy.shop.repository.AuthorRepository;
 import toy.shop.repository.query.AuthorRepositoryQuery;
 
+import javax.swing.text.html.Option;
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,14 +25,18 @@ public class AuthorService {
         authorRepository.save(author);
     }
 
-    public Author findById(Long id) {
+    public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
     }
 
     @Transactional
     public void update(Long id, final String authorName, final AuthorNation nation, final String authorIntro) {
-        Author authorById = findById(id);
-        authorById.changeAuthorValues(authorName,nation,authorIntro);
+        Optional<Author> authorById = findById(id);
+        if (authorById.isEmpty()) {
+            return;
+        }
+        Author author = authorById.get();
+        author.changeAuthorValues(authorName,nation,authorIntro);
     }
 
     public Page<Author> authorList(PageDto pageDto){
@@ -37,7 +44,11 @@ public class AuthorService {
     }
     @Transactional
     public void authorDelete(Long id) throws Exception{
-        Author author = authorRepository.findById(id);
+        Optional<Author> authorById = findById(id);
+        if (authorById.isEmpty()) {
+            return;
+        }
+        Author author = authorById.get();
         authorRepository.delete(author);
     }
 }
