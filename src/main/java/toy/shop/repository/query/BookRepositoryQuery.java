@@ -10,16 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import toy.shop.entity.Author;
 import toy.shop.entity.Book;
-import toy.shop.entity.QBook;
+import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.PageDto;
+import toy.shop.entity.dto.QBookDto;
 
 import javax.persistence.EntityManager;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static toy.shop.entity.QAuthor.author;
-import static toy.shop.entity.QBook.*;
+import static toy.shop.entity.QBook.book;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,15 +28,26 @@ public class BookRepositoryQuery {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public Page<Book> findAllWithCond(PageDto pageDto) {
+    public Page<BookDto> findAllWithCond(PageDto pageDto) {
         Pageable pageable = pageDto.getPageable();
-        QueryResults<Book> results = queryFactory.select(book)
+        QueryResults<BookDto> results = queryFactory.select(new QBookDto(
+                        book.bookName,
+                        book.author.id,
+                        book.publeYear,
+                        book.publisher ,
+                        book.category.cateCode,
+                        book.bookPrice ,
+                        book.bookStock ,
+                        book.bookDiscount,
+                        book.bookIntro ,
+                        book.bookContents
+                ))
                 .from(book)
                 .where(keywordCheck(pageDto.getKeyword()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
-        List<Book> content = results.getResults();
+        List<BookDto> content = results.getResults();
         long total = results.getTotal();
 
         return new PageImpl<>(content, pageable, total);

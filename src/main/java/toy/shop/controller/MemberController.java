@@ -2,10 +2,6 @@ package toy.shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +12,9 @@ import toy.shop.entity.dto.SessionMemberDto;
 import toy.shop.service.MailService;
 import toy.shop.service.MemberService;
 
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Optional;
-import java.util.Random;
 
 @Controller
 @Slf4j
@@ -103,4 +97,5 @@ public class MemberController {
         session.invalidate();
 
     }
+
 }

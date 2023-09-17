@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import toy.shop.entity.Category;
+import toy.shop.entity.dto.CategoryDto;
 import toy.shop.repository.CategoryRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -14,16 +16,27 @@ import java.util.List;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    public List<Category> search(String value) {
+    public List<CategoryDto> search(String value) {
+        List<Category> categories;
         if (value != null) {
-            return categoryRepository.findAllWithCond();
+            categories = categoryRepository.findAllWithCond();
         } else {
-            return categoryRepository.findAll();
+            categories =  categoryRepository.findAll();
         }
+
+        return categories.stream()
+                .map(m-> new CategoryDto(
+                        m.getTier(),
+                        m.getCateName(),
+                        m.getCateParent()
+                ))
+                .collect(Collectors.toList());
     }
 
-    public void save(Category category) {
+    public Long save(Category category) {
+//        Category category = categoryDto.toEntity();
         categoryRepository.save(category);
+        return category.getCateCode();
     }
 
     public Category findById(final Long cateCode) {

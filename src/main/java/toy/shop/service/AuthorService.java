@@ -2,17 +2,13 @@ package toy.shop.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Author;
-import toy.shop.entity.AuthorNation;
-import toy.shop.entity.Book;
-import toy.shop.entity.dto.PageDto;
+import toy.shop.entity.dto.AuthorDto;
 import toy.shop.repository.AuthorRepository;
-import toy.shop.repository.query.AuthorRepositoryQuery;
 
-import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,28 +16,42 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorService {
     private final AuthorRepository authorRepository;
-    private final AuthorRepositoryQuery authorRepositoryQuery;
-    public void authorEnroll(Author author){
+    public Long authorEnroll(AuthorDto authorDto){
+        Author author = authorDto.toEntity();
         authorRepository.save(author);
+        return author.getId();
+    }
+
+    public Optional<AuthorDto> findByIdReturnDto(Long id) {
+        Author author = authorRepository.findById(id).get();
+        return Optional.ofNullable(AuthorDto.builder()
+                .id(author.getId())
+                .authorName(author.getAuthorName())
+                .nation(author.getNation())
+                .authorIntro(author.getAuthorIntro())
+                .createdDate(author.getCreatedDate())
+                .lastModifiedDate(author.getLastModifiedDate())
+                .build());
     }
 
     public Optional<Author> findById(Long id) {
         return authorRepository.findById(id);
     }
+    public List<Author> findByName(String name) {
+        return authorRepository.findByName(name);
+    }
 
     @Transactional
-    public void update(Long id, final String authorName, final AuthorNation nation, final String authorIntro) {
+    public void update(final AuthorDto authorDto,Long id) {
         Optional<Author> authorById = findById(id);
         if (authorById.isEmpty()) {
             return;
         }
         Author author = authorById.get();
-        author.changeAuthorValues(authorName,nation,authorIntro);
+        author.changeAuthorValues(authorDto);
     }
 
-    public Page<Author> authorList(PageDto pageDto){
-        return authorRepositoryQuery.authorGetList(pageDto);
-    }
+
     @Transactional
     public void authorDelete(Long id) throws Exception{
         Optional<Author> authorById = findById(id);

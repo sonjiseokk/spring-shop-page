@@ -1,9 +1,7 @@
 package toy.shop.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import toy.shop.entity.dto.AuthorDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,6 +25,7 @@ public class Author extends BaseEntity{
     @OneToMany(mappedBy = "author")
     private List<Book> bookList = new ArrayList<>();
 
+    @Builder
     public Author(final String authorName, final AuthorNation nation, final String authorIntro) {
         this.authorName = authorName;
         this.nation = nation;
@@ -36,10 +35,18 @@ public class Author extends BaseEntity{
     public void setNation(final AuthorNation nation) {
         this.nation = nation;
     }
-    public void changeAuthorValues(final String authorName, final AuthorNation nation, final String authorIntro){
-        this.authorName = authorName;
-        this.nation = nation;
-        this.authorIntro = authorIntro;
+    public void changeAuthorValues(AuthorDto authorDto){
+        this.authorName = authorDto.getAuthorName();
+        this.nation = authorDto.getNation();
+        this.authorIntro = authorDto.getAuthorIntro();
+    }
+
+    public AuthorDto toDto(){
+        return AuthorDto.builder()
+                .authorName(this.authorName)
+                .nation(this.nation)
+                .authorIntro(this.authorIntro)
+                .build();
     }
 
     @Override

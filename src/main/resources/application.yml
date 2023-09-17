@@ -26,6 +26,7 @@ spring:
       pageable:
         default-page-size: 10
         one-indexed-parameters: true
+  profiles:
+    active: local
 image:
   path: C:/Users/michi/Desktop/images
-

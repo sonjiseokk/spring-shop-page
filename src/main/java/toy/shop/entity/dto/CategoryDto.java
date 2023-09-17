@@ -1,14 +1,14 @@
 package toy.shop.entity.dto;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.ToString;
 import toy.shop.entity.Category;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@ToString
 public class CategoryDto {
     private Long cateCode;
     private int tier;
@@ -18,8 +18,7 @@ public class CategoryDto {
     public CategoryDto() {
     }
 
-    public CategoryDto(final Long cateCode, final int tier, final String cateName, final Long cateParent) {
-        this.cateCode = cateCode;
+    public CategoryDto(final int tier, final String cateName, final Long cateParent) {
         this.tier = tier;
         this.cateName = cateName;
         this.cateParent = cateParent;
@@ -28,9 +27,18 @@ public class CategoryDto {
     public List<CategoryDto> entityToDto(List<Category> categories) {
         ArrayList<CategoryDto> list = new ArrayList<>();
         for (Category category : categories) {
-            list.add(new CategoryDto(category.getCateCode(),category.getTier(), category.getCateName(), category.getCateParent()));
+            list.add(new CategoryDto(category.getTier(), category.getCateName(), category.getCateParent()));
         }
         return list;
 
     }
+
+    public Category toEntity() {
+        return Category.builder()
+                .tier(this.tier)
+                .cateName(this.cateName)
+                .cateParent(this.cateParent)
+                .build();
+    }
+
 }

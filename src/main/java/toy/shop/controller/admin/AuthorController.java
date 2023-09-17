@@ -4,22 +4,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import toy.shop.controller.PageRequest;
-import toy.shop.entity.Author;
 import toy.shop.entity.AuthorNation;
-import toy.shop.entity.Book;
 import toy.shop.entity.dto.AuthorDto;
-import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.PageDto;
 import toy.shop.service.AuthorService;
+import toy.shop.service.AuthorWebService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -28,6 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthorController {
     private final AuthorService authorService;
+    private final AuthorWebService authorWebService;
 
     @GetMapping("/main")
     public String adminMainPage() {
@@ -41,23 +37,29 @@ public class AuthorController {
     }
 
     @PostMapping("/authorEnroll")
-    public String authorEnroll(@ModelAttribute AuthorDto authorDto, @RequestParam String nation, RedirectAttributes rttr) {
+    public String authorEnroll(
+//            @ModelAttribute AuthorDto authorDto,
+            @RequestParam String authorName,
+            @RequestParam String nation,
+            @RequestParam String authorIntro,
+            @RequestParam(required = false) Long id,
+            RedirectAttributes rttr) {
+        AuthorNation authorNation = AuthorNation.valueOf(nation);
+        AuthorDto authorDto = new AuthorDto(authorName, authorNation, authorIntro);
         log.info("author= {}", authorDto);
         authorDto.setNation(AuthorNation.valueOf(nation)); // 문자열을 Enum으로 변환
 
-        // 서비스에는 진짜 객체가 들어가는게 나음
-        Author author = new Author(authorDto.getAuthorName(), authorDto.getNation(), authorDto.getAuthorIntro());
+        log.info("authorDto = {}", authorDto);
+        authorService.authorEnroll(authorDto);
 
-        authorService.authorEnroll(author);
-        rttr.addFlashAttribute("enroll_result", author.getAuthorName());
+        rttr.addFlashAttribute("enroll_result", authorDto.getAuthorName());
         return "redirect:/admin/authorManage";
     }
 
     @GetMapping("/authorManage")
     public String authorManagePage(Pageable pageable, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, Model model) {
         PageDto pageDto = new PageDto(pageable, keyword);
-        log.info("pageDto = {}", pageDto);
-        Page<Author> result = authorService.authorList(pageDto);
+        Page<AuthorDto> result = authorWebService.authorList(pageDto);
         if (result.hasContent()) {
             model.addAttribute("list", result.getContent());    // 작가 존재 경우
         } else {
@@ -73,7 +75,7 @@ public class AuthorController {
         PageDto pageDto = new PageDto(pageable, keyword);
         log.info("detail in pageDto = {}", pageDto);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("authorInfo", authorService.findById(id).get());
+        model.addAttribute("authorInfo", authorService.findByIdReturnDto(id).get());
 
         return "admin/authorDetail";
 
@@ -84,15 +86,24 @@ public class AuthorController {
         PageDto pageDto = new PageDto(pageable, keyword);
         log.info("detail in pageDto = {}", pageDto);
         model.addAttribute("pageDto", pageDto);
-        model.addAttribute("authorInfo", authorService.findById(id).get());
+
+        AuthorDto authorDto = authorService.findByIdReturnDto(id).get();
+        model.addAttribute("authorInfo", authorDto);
 
         return "admin/authorModify";
     }
 
     @PostMapping("/authorModify/{id}")
-    public String authorModify(@ModelAttribute AuthorDto authorDto, @RequestParam String nation, @PathVariable Long id, Model model) {
-        authorDto.setNation(AuthorNation.valueOf(nation)); // 문자열을 Enum으로 변환
-        authorService.update(id,authorDto.getAuthorName(),authorDto.getNation(),authorDto.getAuthorIntro());
+    public String authorModify(
+//            @ModelAttribute AuthorDto authorDto,
+            @RequestParam String authorName,
+            @RequestParam String nation,
+            @RequestParam String authorIntro,
+            @PathVariable Long id, Model model) {
+        AuthorNation authorNation = AuthorNation.valueOf(nation);
+        AuthorDto authorDto = new AuthorDto(authorName, authorNation, authorIntro);
+
+        authorService.update(authorDto,id);
         model.addAttribute("modify_result", 1);
         return "redirect:/admin/authorManage";
     }
@@ -100,8 +111,8 @@ public class AuthorController {
     @GetMapping("/authorPop")
     public String authorPopPage(@PageableDefault(page = 0, size = 5) Pageable pageable, @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword, Model model) {
         PageDto pageDto = new PageDto(pageable, keyword);
-        int totalPages = authorService.authorList(pageDto).getTotalPages();
-        List<Author> list = authorService.authorList(pageDto).getContent();
+        int totalPages = authorWebService.authorList(pageDto).getTotalPages();
+        List<AuthorDto> list = authorWebService.authorList(pageDto).getContent();
         if (list.isEmpty()) {
             model.addAttribute("listCheck", "empty");
         } else {

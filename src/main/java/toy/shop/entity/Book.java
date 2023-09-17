@@ -1,17 +1,14 @@
 package toy.shop.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import toy.shop.entity.dto.BookDto;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
@@ -58,11 +55,11 @@ public class Book extends BaseEntity{
         this.category = category;
     }
 
-    public void changeDtoValue(BookDto dto,Author author,Category category,LocalDate publeYear) {
+    public void changeDtoValue(BookDto dto,Author author,Category category) {
         this.bookName = dto.getBookName();
         this.author = author;
         this.category = category;
-        this.publeYear = publeYear;
+        this.publeYear = dto.getPubleYear();
         this.publisher = dto.getPublisher();
         this.bookPrice = dto.getBookPrice();
         this.bookStock = dto.getBookStock();

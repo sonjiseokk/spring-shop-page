@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +18,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import toy.shop.entity.Author;
 import toy.shop.entity.Book;
 import toy.shop.entity.Category;
-import toy.shop.entity.dto.AuthorDto;
 import toy.shop.entity.dto.BookDto;
 import toy.shop.entity.dto.CategoryDto;
 import toy.shop.entity.dto.PageDto;
@@ -29,16 +27,7 @@ import toy.shop.service.BookService;
 import toy.shop.service.CategoryService;
 import toy.shop.service.UploadService;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/admin")
@@ -55,7 +44,7 @@ public class BookController {
     public String goodsEnrollPage(Model model) throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
         objm.registerModule(new JavaTimeModule());
-        List<Category> allList = categoryService.search(null);
+        List<CategoryDto> allList = categoryService.search(null);
         String cateList = objm.writeValueAsString(allList);
         model.addAttribute("cateList", cateList);
         return "admin/goodsEnroll";
@@ -65,11 +54,7 @@ public class BookController {
         Author relatedAuthor = authorService.findById(dto.getAuthorId()).get();
         Category relatedCategory = categoryService.findById(dto.getCateCode());
 
-        LocalDate date = dto.convertStringToLocalDate(dto.getPubleYear());
-        Book book = new Book(dto.getBookName(),date,dto.getPublisher(),dto.getBookPrice(), dto.getBookStock(), dto.getBookDiscount(),dto.getBookIntro(),dto.getBookContents());
-        book.setAuthor(relatedAuthor);
-        book.setCategory(relatedCategory);
-
+        Book book = bookService.setBook(dto,relatedAuthor, relatedCategory);
         bookService.bookEnroll(book);
 
         rttr.addFlashAttribute("enroll_result", book.getBookName());
@@ -79,7 +64,7 @@ public class BookController {
     @GetMapping("/goodsManage")
     public String goodsManagePage(Pageable pageable, @RequestParam(required = false,defaultValue = "") String keyword, Model model){
         PageDto pageDto = new PageDto(pageable, keyword);
-        Page<Book> result = bookService.pagingAllBook(pageDto);
+        Page<BookDto> result = bookService.pagingAllBook(pageDto);
 
         if (!result.isEmpty()) {
             model.addAttribute("list", result.getContent());
@@ -121,11 +106,10 @@ public class BookController {
     }
     @PostMapping("/goodsModify/{id}")
     public String goodsModify(@ModelAttribute BookDto dto, @PathVariable Long id, Model model){
-        LocalDate publeYear = dto.convertStringToLocalDate(dto.getPubleYear());
         Author author = authorService.findById(dto.getAuthorId()).get();
         Category category = categoryService.findById(dto.getCateCode());
 
-        bookService.changeValues(id, dto, author, category, publeYear);
+        bookService.changeValues(id, dto, author, category);
 
         return "redirect:/admin/goodsDetail/{id}";
     }
@@ -159,11 +143,8 @@ public class BookController {
     private String getCateList() throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
         objm.registerModule(new JavaTimeModule());
-        List<Category> allList = categoryService.search(null);
-
-        CategoryDto categoryDto = new CategoryDto();
-        List<CategoryDto> categoryDtos = categoryDto.entityToDto(allList);
-        return objm.writeValueAsString(categoryDtos);
+        List<CategoryDto> allList = categoryService.search(null);
+        return objm.writeValueAsString(allList);
     }
 
 

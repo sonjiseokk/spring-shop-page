@@ -1,23 +1,19 @@
 package toy.shop.entity.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
-import toy.shop.entity.Author;
-import toy.shop.entity.Category;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-
-import static javax.persistence.FetchType.LAZY;
 
 @Getter
 public class BookDto {
 
     private String bookName;
     private Long authorId;
-    private String publeYear;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate publeYear;
     private String publisher;
     private Long cateCode;
     private int bookPrice;
@@ -26,10 +22,10 @@ public class BookDto {
     private String bookIntro;
     private String bookContents;
 
-    public BookDto(final String bookName, final Long authorId, final String publeYear, final String publisher, final Long cateCode, final int bookPrice, final int bookStock, final double bookDiscount, final String bookIntro, final String bookContents) {
+    @QueryProjection
+    public BookDto(final String bookName, final Long authorId, final LocalDate publeYear, final String publisher, final Long cateCode, final int bookPrice, final int bookStock, final double bookDiscount, final String bookIntro, final String bookContents) {
         this.bookName = bookName;
         this.authorId = authorId;
-        this.publeYear = publeYear;
         this.publisher = publisher;
         this.cateCode = cateCode;
         this.bookPrice = bookPrice;
@@ -37,6 +33,7 @@ public class BookDto {
         this.bookDiscount = bookDiscount;
         this.bookIntro = bookIntro;
         this.bookContents = bookContents;
+        this.publeYear = publeYear;
     }
 
     public LocalDate convertStringToLocalDate(String value){

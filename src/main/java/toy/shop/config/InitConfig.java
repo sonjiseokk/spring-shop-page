@@ -2,6 +2,7 @@ package toy.shop.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.*;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
+@Profile("local")
 public class InitConfig {
     private final InitMemberService initMemberService;
     @PostConstruct
