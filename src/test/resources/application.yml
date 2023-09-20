@@ -9,6 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
   mail:
     host: smtp.gmail.com # 1
     port: 587 # 2

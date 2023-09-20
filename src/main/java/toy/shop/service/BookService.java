@@ -9,6 +9,7 @@ import toy.shop.entity.Author;
 import toy.shop.entity.Book;
 import toy.shop.entity.Category;
 import toy.shop.entity.dto.BookDto;
+import toy.shop.entity.dto.GoodsDto;
 import toy.shop.entity.dto.PageDto;
 import toy.shop.repository.BookRepository;
 import toy.shop.repository.query.BookRepositoryQuery;
@@ -28,7 +29,7 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-    public Page<BookDto> pagingAllBook(PageDto pageDto) {
+    public Page<GoodsDto> pagingAllBook(PageDto pageDto) {
         return bookRepositoryQuery.findAllWithCond(pageDto);
     }
 

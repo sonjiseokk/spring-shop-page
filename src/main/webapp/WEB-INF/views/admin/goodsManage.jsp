@@ -35,14 +35,14 @@
                             </thead>
                             <c:forEach items="${list}" var="list">
                                 <tr>
-                                    <td><c:out value="${list.id}"></c:out></td>
+                                    <td><c:out value="${list.bookId}"></c:out></td>
                                     <td>
-                                        <a class="move" href='<c:out value="/admin/goodsDetail/${list.id}"/>'>
+                                        <a class="move" href='<c:out value="/admin/goodsDetail/${list.bookId}"/>'>
                                             <c:out value="${list.bookName}"></c:out>
                                         </a>
                                         </td>
-                                    <td><c:out value="${list.author.authorName}"></c:out></td>
-                                    <td><c:out value="${list.category.cateName}"></c:out></td>
+                                    <td><c:out value="${list.authorName}"></c:out></td>
+                                    <td><c:out value="${list.cateName}"></c:out></td>
                                     <td><c:out value="${list.bookStock}"></c:out></td>
                                     <td><fmt:parseDate value="${ list.createdDate }"
                                                        pattern="yyyy-MM-dd" var="parsedDateTime" type="both" />

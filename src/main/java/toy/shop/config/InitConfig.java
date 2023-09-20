@@ -44,19 +44,6 @@ public class InitConfig {
             memberService.memberJoin(member);
             memberService.memberJoin(admin);
 
-            for (int i = 0; i < 100; i++) {
-                Author author1 = new Author("이름" + i, AuthorNation.KOREA, "설명");
-//                Category category = new Category(1, "국내", null);
-//                categoryRepository.save(category);
-
-                Book book = new Book("상품"+i, LocalDate.now(), "퍼블리셔", 2000 * i, 10 * i, 0.1, "책소개", "작가소개");
-                book.setAuthor(author1);
-//                book.setCategory(category);
-                bookRepository.save(book);
-                authorRepository.save(author1);
-
-            }
-
             Category category = new Category(1, "국내", null);
             em.persist(category);
             Category category1 = new Category(2, "소설", category.getCateCode());
@@ -72,7 +59,18 @@ public class InitConfig {
             Category category12 = new Category(3, "경영일반", category11.getCateCode());
             em.persist(category12);
 
+            for (int i = 0; i < 100; i++) {
+                Author author1 = new Author("이름" + i, AuthorNation.KOREA, "설명");
+//                Category category = new Category(1, "국내", null);
+//                categoryRepository.save(category);
 
+                Book book = new Book("상품"+i, LocalDate.now(), "퍼블리셔", 2000 * i, 10 * i, 0.1, "책소개", "작가소개");
+                book.setAuthor(author1);
+                book.setCategory(category12);
+                bookRepository.save(book);
+                authorRepository.save(author1);
+
+            }
             em.flush();
             em.clear();
         }
