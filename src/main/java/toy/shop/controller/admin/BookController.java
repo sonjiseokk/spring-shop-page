@@ -19,6 +19,7 @@ import toy.shop.entity.Author;
 import toy.shop.entity.Book;
 import toy.shop.entity.Category;
 import toy.shop.entity.dto.BookDto;
+import toy.shop.entity.dto.CategoryDto;
 import toy.shop.entity.dto.GoodsDto;
 import toy.shop.entity.dto.PageDto;
 import toy.shop.entity.web.AttachImage;
@@ -44,7 +45,7 @@ public class BookController {
     public String goodsEnrollPage(Model model) throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
         objm.registerModule(new JavaTimeModule());
-        List<Category> allList = categoryService.search(null);
+        List<CategoryDto> allList = categoryService.findAll();
         String cateList = objm.writeValueAsString(allList);
         model.addAttribute("cateList", cateList);
         return "admin/goodsEnroll";
@@ -69,11 +70,6 @@ public class BookController {
         PageDto pageDto = new PageDto(pageable, keyword);
         log.info("pageable in goodsmanage = {}",pageable);
         Page<GoodsDto> result = bookService.pagingAllBook(pageDto);
-
-        // 차라리 이걸 통합해서 갖는 dto를 하나 만들어서 그걸 처리하는 서비스를 만들고
-        // 모델에는 하나만 넘겨줘서 다 처리할수있게 하는게 나을듯
-        // dto가 연관관계를 가지기엔 너무 목적성이 맞지 않는 듯
-
         if (!result.isEmpty()) {
             model.addAttribute("list", result.getContent());
         } else{
@@ -151,7 +147,7 @@ public class BookController {
     private String getCateList() throws JsonProcessingException {
         ObjectMapper objm = new ObjectMapper();
         objm.registerModule(new JavaTimeModule());
-        List<Category> allList = categoryService.search(null);
+        List<CategoryDto> allList = categoryService.findAll();
         return objm.writeValueAsString(allList);
     }
 

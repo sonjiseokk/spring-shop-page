@@ -6,12 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import toy.shop.entity.Category;
-import toy.shop.entity.QCategory;
+import toy.shop.entity.dto.CategoryDto;
+import toy.shop.entity.dto.QCategoryDto;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static toy.shop.entity.QCategory.*;
+import static toy.shop.entity.QCategory.category;
 
 @Repository
 @Slf4j
@@ -21,18 +22,17 @@ public class CategoryRepository {
     private final EntityManager em;
     private final JPAQueryFactory queryFactory;
 
-    public List<Category> findAll(){
-        return em.createQuery("select c from Category c", Category.class)
-                .getResultList();
-    }
-
-    public List<Category> findAllWithCond() {
-        return queryFactory
-                .select(category)
+    public List<CategoryDto> findAllDto(){
+        return queryFactory.select(new QCategoryDto(
+                        category.cateCode,
+                        category.tier,
+                        category.cateName,
+                        category.cateParent
+                ))
                 .from(category)
-                .where()
                 .fetch();
     }
+
 
     public void save(final Category category) {
         em.persist(category);
