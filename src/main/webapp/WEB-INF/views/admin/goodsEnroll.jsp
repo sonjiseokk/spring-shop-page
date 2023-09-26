@@ -553,6 +553,10 @@
         str += "<img src='/display?fileName=" + fileCallPath +"'>";
         str += "<div class='imgDeleteBtn'>x</div>";
         str += "</div>";
+        str += "<input type='hidden' name='imageList[0].fileName' value='"+ obj.fileName +"'>";
+        str += "<input type='hidden' name='imageList[0].uuid' value='"+ obj.uuid +"'>";
+        str += "<input type='hidden' name='imageList[0].uploadPath' value='"+ obj.uploadPath +"'>";
+
         uploadResult.append(str);
     }
 </script>

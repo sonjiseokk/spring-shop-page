@@ -1,21 +1,20 @@
 package toy.shop.entity.web;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Embeddable;
+
 @NoArgsConstructor
 @Data
+@Embeddable
 public class AttachImage {
-    private Long id;
     private String UUID;
     private String fileName;
     private String uploadPath;
 
-
-    @Builder
-    public AttachImage(Long id, String fileName, String uploadPath) {
-        this.id = id;
+    public AttachImage(final String UUID, final String fileName, final String uploadPath) {
+        this.UUID = UUID;
         this.fileName = fileName;
         this.uploadPath = uploadPath;
     }

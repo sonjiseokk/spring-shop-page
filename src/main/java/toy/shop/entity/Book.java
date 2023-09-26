@@ -7,6 +7,8 @@ import toy.shop.entity.dto.BookDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -34,6 +36,10 @@ public class Book extends BaseEntity{
     private double bookDiscount;
     private String bookIntro;
     private String bookContents;
+
+    @OneToMany(mappedBy = "book")
+    private List<GoodsImage> goodsImages = new ArrayList<>();
+
 
 
     public Book(final String bookName, final LocalDate publeYear, final String publisher, final int bookPrice, final int bookStock, final double bookDiscount, final String bookIntro, final String bookContents) {
